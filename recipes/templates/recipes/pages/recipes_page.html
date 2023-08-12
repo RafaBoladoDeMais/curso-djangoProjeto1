@@ -5,10 +5,10 @@
     {% include 'recipes/partials/_search.html' %}
 
     <main class='main-content-container'>
-        <div class="main-content main-content-list container">
-            {% block content %}{% endblock content %}  
-        </div> 
+        <div class="main-content main-content-detail container">        
+            {% include 'recipes/partials/_recipes.html' %}
+        </div>
+        {% include 'recipes/partials/_footer.html' %}
     </main>
-    {% include 'recipes/partials/_footer.html' %}
 </body>
 </html>
