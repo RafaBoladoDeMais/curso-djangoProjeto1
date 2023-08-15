@@ -1,6 +1,5 @@
 from django.shortcuts import render, get_list_or_404, get_object_or_404
 from django.http import Http404
-from utils.recipes import factory
 from . import models
 
 # Create your views here. 

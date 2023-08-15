@@ -5,8 +5,8 @@ from . import models
 # Register your models here.
 @admin.register(models.Recipe)
 class RecipesAdmin(admin.ModelAdmin):
-    pass
+    list_display = 'id', 'title',
 
 @admin.register(models.Category)
 class CategoryAdmin(admin.ModelAdmin):
-    pass
+    list_display = 'id', 'name',
