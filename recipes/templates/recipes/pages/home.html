@@ -4,6 +4,8 @@
     <div class="main-content main-content-list container">
         {% for recipe in recipes %}
             {% include 'recipes/partials/_recipes.html' %}
+        {% empty %}
+            <h1>Nao há receitas para mostrar😢</h1>
         {% endfor %}
         
     </div>
