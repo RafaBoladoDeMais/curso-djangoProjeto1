@@ -1,0 +1,5 @@
+#type: ignore
+
+[run]
+branch = True
+omit = venv/*, **/*test*.py, manage.py
