@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_list_or_404, get_object_or_404
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from . import models
 
 # Create your views here. 
@@ -11,6 +11,7 @@ def home(request):
         'recipes': recipe,
     }
     return render(request, 'recipes/pages/home.html', context)
+
 
 def recipes(request, id):
     recipe = models.Recipe.objects.filter(id=id).first()
@@ -42,3 +43,16 @@ def category(request, id):
     }
 
     return render(request, 'recipes/pages/home.html', context)
+
+def search(request):
+    search_term = request.GET.get('q').strip()
+
+    if not search_term:
+        raise Http404
+    page_title = f'Search for {search_term}'
+    context ={
+        'page_title': page_title,
+        'search_term': search_term,
+        # 'recipes': recipe,
+    }
+    return render(request,'recipes/pages/search.html', context) 

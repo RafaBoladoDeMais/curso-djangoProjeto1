@@ -12,7 +12,7 @@ class RecipeModelTest(RecipeTestBase):
         recipe = Recipe(
             title = 'Chocolate com Whey',
             description = 'Uma otima sobremesa para depois do treino',
-            slug = 'chocolate-com-whey',
+            slug = 'chocolate-com-whey-1',
             preparation_time = 20,
             preparation_time_unit = 'min',
             servings = 2,

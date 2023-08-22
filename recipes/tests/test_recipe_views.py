@@ -3,7 +3,7 @@ from django.urls import reverse, resolve
 from recipes import views
 from .test_recipe_base import RecipeTestBase
 
-class RecipeHomeViewsTests(RecipeTestBase):
+class RecipeHomeViewsTest(RecipeTestBase):
 
     def test_recipe_home_view_function_is_correct(self):
         view = resolve(reverse('recipes:home'))
@@ -55,7 +55,7 @@ class RecipeHomeViewsTests(RecipeTestBase):
         # self.assertEqual(response_recipes.author, author)
 
 
-class RecipeCategoryViewsTests(RecipeTestBase):
+class RecipeCategoryViewsTest(RecipeTestBase):
     def test_recipe_category_templates_loads_recipes(self):
         #TESTANDO CATEGORY
         nedded_title = 'This is the category test'
@@ -89,7 +89,7 @@ class RecipeCategoryViewsTests(RecipeTestBase):
         self.assertEqual(response.status_code, 404)
 
 
-class RecipePageViewsTests(RecipeTestBase):
+class RecipePageViewsTest(RecipeTestBase):
     def test_recipe_page_templates_loads_recipes(self):
         #TESTANDO RECIPE PAGE
         nedded_title = 'This is the recipe page test'
@@ -121,4 +121,19 @@ class RecipePageViewsTests(RecipeTestBase):
             is_published=False
         )
         response = self.client.get(reverse('recipes:recipe', args=(1, )))
+        self.assertEqual(response.status_code, 404)
+
+
+class RecipeSearchViewTests(RecipeTestBase):
+    def test_recipe_search_uses_correct_view(self):
+        view = resolve(reverse('recipes:search'))
+        self.assertIs(view.func, views.search)
+
+    def test_recipe_search_view_loads_correct_template(self):
+        response = self.client.get(reverse('recipes:search') + '?q=teste')
+        self.assertTemplateUsed(response, 'recipes/pages/search.html')
+
+    def test_recipe_search_raises_404_if_no_search_args(self):
+        url = reverse('recipes:search')
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
