@@ -1,7 +1,9 @@
 from unittest import TestCase
+from recipes.tests.test_recipe_base import RecipeTestBase
 from utils.pagination_func import make_pagination_range
+from django.urls import reverse, resolve
 
-class PaginationTest(TestCase):
+class PaginationTest(RecipeTestBase):
     def test_make_pagination_range_returns_a_pagination_range(self):
         pagination = make_pagination_range(
             page_range=list(range(1, 21)),
@@ -100,3 +102,33 @@ class PaginationTest(TestCase):
         )['pagination'] 
 
         self.assertEqual([17, 18, 19, 20], pagination)
+    
+    #CP is current page  ->
+    def test_pagination_raises_value_error_if_type_of_cp_arg_is_not_int(self):
+        url = reverse('recipes:home')
+        for i in range(10):
+            self.make_recipe(
+                slug=f'slug-{i}',
+                author_data={
+                'username': f'user{i}'}
+            )
+        page_num_for_test = 2
+        response1 = self.client.get(url + f'?page=a')
+        response2 = self.client.get(url + f'?page={page_num_for_test}')
+        
+        self.assertEqual(1, response1.context['pagination_range']['current_page'])
+        self.assertEqual(2, response2.context['pagination_range']['current_page'])
+
+    def test_pagination_loads_recipes(self):
+        url = reverse('recipes:home')
+        for i in range(10):
+            self.make_recipe(
+                slug=f'slug-{i}',
+                author_data={
+                'username': f'user{i}'},
+                title=f'title test {i}'
+            )
+        page_num = 1
+        response = self.client.get(url + f'?page={page_num}')
+
+        self.assertIn('title test 2', response.content.decode('utf-8'))

@@ -1,4 +1,6 @@
 import math
+from django.core.paginator import Paginator
+
 
 def make_pagination_range( page_range,qty_pages,current_page):
     _middle_page = math.ceil(qty_pages/2)
@@ -8,15 +10,15 @@ def make_pagination_range( page_range,qty_pages,current_page):
     start_range = 0
     stop_range = 0
     #aki é pra caso a pagina atual esteja antes do primeiro meio do range ex:[1, 2, [3], 4, 5]
-    if current_page <= _middle_page:
+    if int(current_page) <= _middle_page:
         pagination = page_range[0:qty_pages]
     #e aki é pra caso esteja no ultimo meio de range
-    elif current_page > _stop_point:
+    elif int(current_page) > _stop_point:
         
         pagination = page_range[-qty_pages:]
     
     #aki eu faço os calculos para mostrar o range das paginas
-    if current_page > _middle_page and current_page <= _stop_point:
+    if int(current_page) > _middle_page and int(current_page) <= _stop_point:
         '''
         aki começa a mexer o range, start_rage sempre sendo 1 a mais 
         que o range anterior
@@ -35,7 +37,7 @@ def make_pagination_range( page_range,qty_pages,current_page):
             [5, [6], 7, 8] -> currente_page = 6; md = 2; resultado => 6-2=4;
 
         '''
-        start_range = current_page - _middle_page
+        start_range = int(current_page) - _middle_page
 
 
         '''
@@ -57,26 +59,26 @@ def make_pagination_range( page_range,qty_pages,current_page):
         'pagination': pagination,
         'page_range': page_range,
         'qty_pages': qty_pages,
-        'current_page': current_page,
+        'current_page': int(current_page),
         'total_pages': _total_pages,
         'start_range': start_range,
         'stop_range': stop_range,
-        'first_page_out_of_range': current_page > _middle_page,
-        'last_page_out_of_range': stop_range < _total_pages,    
+        'first_page_out_of_range': int(current_page) > _middle_page,
+        'last_page_out_of_range': int(current_page) < _stop_point,    
     }
 
+def make_pagination(request, queryset, per_page, qty_pages=4):
+    try:
+        current_page = int(request.GET.get('page', 1))
+    except ValueError:
+        current_page = 1
+    paginator = Paginator(queryset, per_page)
+    page_obj = paginator.get_page(current_page)
 
+    pagination_range = make_pagination_range(
+        paginator.page_range,
+        qty_pages,
+        current_page
+    )
+    return page_obj, pagination_range
 
-if __name__ == '__main__':
-    # for i in range(1, 21):
-    #     a: dict = make_pagination_range(list(range(1, 21)),4, int(i)) #type: ignore
-    #     for num in a['pagination']:
-    #         if num == i:
-    #             print(f'[{num}]', end=' ')
-    #         else:
-    #             print(num, end=' ')
-    #     print()
-    #         # print(num)
-
-    a = make_pagination_range(list(range(1, 21)),4, 0)['pagination']
-    print(a)
