@@ -2,14 +2,21 @@ from django.shortcuts import render, get_list_or_404, get_object_or_404
 from django.http import Http404, HttpResponse
 from . import models
 from django.db.models import Q
+from django.core.paginator import Paginator
 
 # Create your views here. 
 
 def home(request):
-    recipe = models.Recipe.objects.all().filter(is_published=True).order_by('-id')
+    recipes = models.Recipe.objects.all().filter(is_published=True).order_by('-id')
+
+    paginator = Paginator(recipes, 9)
+    current_page = request.GET.get('page', 1)
+    page_obj = paginator.get_page(current_page)
+
+
     context ={
         'page_title': 'Home',
-        'recipes': recipe,
+        'recipes': page_obj,
     }
     return render(request, 'recipes/pages/home.html', context)
 
@@ -68,4 +75,5 @@ def search(request):
         'search_term': search_term,
         'recipes': recipes,
     }
-    return render(request,'recipes/pages/search.html', context) 
+    return render(request,'recipes/pages/search.html', context)
+

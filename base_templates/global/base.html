@@ -8,6 +8,8 @@
         <div class="main-content main-content-list container">
             {% block content %}{% endblock content %}  
         </div> 
+
+        {% include 'recipes/partials/_pagination.html' %}
     </main>
     {% include 'recipes/partials/_footer.html' %}
 </body>
