@@ -2,6 +2,7 @@ from unittest import TestCase
 from recipes.tests.test_recipe_base import RecipeTestBase
 from utils.pagination_func import make_pagination_range
 from django.urls import reverse, resolve
+from unittest.mock import patch
 
 class PaginationTest(RecipeTestBase):
     def test_make_pagination_range_returns_a_pagination_range(self):
@@ -132,3 +133,21 @@ class PaginationTest(RecipeTestBase):
         response = self.client.get(url + f'?page={page_num}')
 
         self.assertIn('title test 2', response.content.decode('utf-8'))
+
+    def test_recipe_home_is_paginated(self):
+
+        for i in range(17):
+            kwargs = {'slug': f'r-{i}', 'author_data':{'username': f'user{i}'}}
+            self.make_recipe(**kwargs)
+
+
+        with patch('recipes.views.PER_PAGE', new=3):
+            response = self.client.get(reverse('recipes:home'))
+            recipes = response.context['recipes']
+            paginator = recipes.paginator
+
+        self.assertEqual(paginator.num_pages, 6)
+        self.assertEqual(len(paginator.get_page(1)), 3)
+        self.assertEqual(len(paginator.get_page(4)), 3)
+        self.assertEqual(len(paginator.get_page(6)), 2)
+        

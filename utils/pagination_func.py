@@ -2,6 +2,8 @@ import math
 from django.core.paginator import Paginator
 
 
+# python -c "import string as s;from random import SystemRandom as sr;print(''.join(sr().choices(s.ascii_letters + s.punctuation, k=64)))"
+
 def make_pagination_range( page_range,qty_pages,current_page):
     _middle_page = math.ceil(qty_pages/2)
     _stop_point = len(page_range) - _middle_page

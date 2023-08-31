@@ -6,8 +6,10 @@ from .test_recipe_base import RecipeTestBase
 class RecipeSearchViewTests(RecipeTestBase):
     def test_recipe_search_uses_correct_view(self):
         view = resolve(reverse('recipes:search'))
-        self.assertIs(view.func, views.search)
+        self.assertIs(view.func, views.search)  
+        pass
 
+    
     def test_recipe_search_view_loads_correct_template(self):
         response = self.client.get(reverse('recipes:search') + '?q=teste')
         self.assertTemplateUsed(response, 'recipes/pages/search.html')
