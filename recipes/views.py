@@ -13,7 +13,6 @@ def home(request):
     recipes = models.Recipe.objects.all().filter(is_published=True).order_by('-id')
 
     page_obj, pagination_range = make_pagination(request, recipes, PER_PAGE)
-    messages.success(request, 'SUCCESS MESSAGE HERE U SON OF BITCH')
 
     context ={
         'page_title': 'Home',
