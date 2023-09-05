@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import Http404
 from .forms import RegisterForm
+from django.contrib.auth.models import User
+
 
 # Create your views here.
 
@@ -11,6 +13,7 @@ def register_view(request):
 
     return render(request, 'authors/pages/register_view.html',{
         'form': form,
+        'page_title': 'Cadastre-se',
     })
 
 def register_created(request):
